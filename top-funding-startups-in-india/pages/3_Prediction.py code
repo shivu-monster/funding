@@ -1,0 +1,113 @@
+import streamlit as st
+import pandas as pd
+import joblib
+
+st.set_page_config(page_title="Funding Prediction", page_icon="🔮")
+
+st.title("🔮 Startup Funding Prediction")
+
+st.markdown("Predict the expected funding amount for a startup.")
+
+# Load Model
+
+try:
+model = joblib.load("models/funding_model.pkl")
+except:
+st.warning("Model file not found. Please train and save a model first.")
+st.stop()
+
+# User Inputs
+
+startup_name = st.text_input("Startup Name")
+
+industry = st.selectbox(
+"Industry",
+[
+"FinTech",
+"EdTech",
+"E-commerce",
+"HealthTech",
+"AI",
+"SaaS",
+"Consumer Electronics"
+]
+)
+
+city = st.selectbox(
+"City",
+[
+"Bengaluru",
+"Mumbai",
+"Delhi",
+"Hyderabad",
+"Chennai",
+"Pune"
+]
+)
+
+investment_type = st.selectbox(
+"Investment Type",
+[
+"Seed Funding",
+"Series A",
+"Series B",
+"Series C",
+"Series D"
+]
+)
+
+# Encoding Sample Values
+
+industry_map = {
+"FinTech": 0,
+"EdTech": 1,
+"E-commerce": 2,
+"HealthTech": 3,
+"AI": 4,
+"SaaS": 5,
+"Consumer Electronics": 6
+}
+
+city_map = {
+"Bengaluru": 0,
+"Mumbai": 1,
+"Delhi": 2,
+"Hyderabad": 3,
+"Chennai": 4,
+"Pune": 5
+}
+
+investment_map = {
+"Seed Funding": 0,
+"Series A": 1,
+"Series B": 2,
+"Series C": 3,
+"Series D": 4
+}
+
+# Predict Button
+
+if st.button("Predict Funding Amount"):
+
+```
+input_data = pd.DataFrame({
+    "Industry": [industry_map[industry]],
+    "City": [city_map[city]],
+    "InvestmentType": [investment_map[investment_type]]
+})
+
+prediction = model.predict(input_data)[0]
+
+st.success(
+    f"Estimated Funding Amount: ${prediction:,.2f}"
+)
+
+st.metric(
+    "Predicted Funding",
+    f"${prediction:,.0f}"
+)
+
+st.info(
+    f"Prediction generated for {startup_name if startup_name else 'selected startup profile'}"
+)
+```
