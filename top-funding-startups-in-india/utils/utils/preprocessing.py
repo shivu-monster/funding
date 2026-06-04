@@ -17,6 +17,7 @@ df = df.fillna("Unknown")
 
 # Convert funding amount to numeric
 if "AmountInUSD" in df.columns:
+
     df["AmountInUSD"] = (
         df["AmountInUSD"]
         .astype(str)
@@ -32,6 +33,7 @@ if "AmountInUSD" in df.columns:
 
 # Convert Date column
 if "Date" in df.columns:
+
     df["Date"] = pd.to_datetime(
         df["Date"],
         errors="coerce"
@@ -44,14 +46,15 @@ def get_basic_stats(df):
 """
 Return basic dataset statistics.
 """
-stats = {
-"rows": df.shape[0],
-"columns": df.shape[1],
-"missing_values": int(df.isnull().sum().sum()),
-"duplicates": int(df.duplicated().sum())
-}
 
 ```
+stats = {
+    "rows": df.shape[0],
+    "columns": df.shape[1],
+    "missing_values": int(df.isnull().sum().sum()),
+    "duplicates": int(df.duplicated().sum())
+}
+
 return stats
 ```
 
@@ -59,10 +62,11 @@ def top_funded_startups(df, n=10):
 """
 Return top funded startups.
 """
-if "StartupName" not in df.columns:
-return pd.DataFrame()
 
 ```
+if "StartupName" not in df.columns:
+    return pd.DataFrame()
+
 return (
     df.groupby("StartupName")["AmountInUSD"]
     .sum()
@@ -76,10 +80,11 @@ def top_cities(df, n=10):
 """
 Return top funding cities.
 """
-if "CityLocation" not in df.columns:
-return pd.DataFrame()
 
 ```
+if "CityLocation" not in df.columns:
+    return pd.DataFrame()
+
 return (
     df.groupby("CityLocation")["AmountInUSD"]
     .sum()
@@ -93,10 +98,11 @@ def top_industries(df, n=10):
 """
 Return top funded industries.
 """
-if "IndustryVertical" not in df.columns:
-return pd.DataFrame()
 
 ```
+if "IndustryVertical" not in df.columns:
+    return pd.DataFrame()
+
 return (
     df.groupby("IndustryVertical")["AmountInUSD"]
     .sum()
