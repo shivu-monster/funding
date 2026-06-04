@@ -12,9 +12,9 @@ initial_sidebar_state="expanded"
 # Banner Image
 
 try:
-st.image("assets/banner.png", use_container_width=True)
+    st.image("assets/banner.png", use_container_width=True)
 except:
-st.warning("Banner image not found.")
+    st.warning("Banner image not found.")
 
 # Title
 
