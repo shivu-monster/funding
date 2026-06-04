@@ -76,6 +76,7 @@ Top investors chart.
 """
 data = (
 df["InvestorsName"]
+.dropna()
 .value_counts()
 .head(top_n)
 .reset_index()
@@ -98,14 +99,17 @@ def plot_funding_trend(df):
 """
 Funding trend over years.
 """
-df["Date"] = pd.to_datetime(
-df["Date"],
-errors="coerce"
-)
+temp_df = df.copy()
 
 ```
+temp_df["Date"] = pd.to_datetime(
+    temp_df["Date"],
+    errors="coerce"
+)
+
 trend = (
-    df.groupby(df["Date"].dt.year)["AmountInUSD"]
+    temp_df.dropna(subset=["Date"])
+    .groupby(temp_df["Date"].dt.year)["AmountInUSD"]
     .sum()
     .reset_index()
 )
@@ -129,6 +133,7 @@ Investment type distribution.
 """
 data = (
 df["InvestmentType"]
+.dropna()
 .value_counts()
 .reset_index()
 )
@@ -145,3 +150,4 @@ fig = px.pie(
 
 return fig
 ```
+
