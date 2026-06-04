@@ -1,0 +1,40 @@
+# create_model.py
+
+import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+
+# Load dataset
+df = pd.read_csv("data/startup_funding.csv")
+
+# Data cleaning
+df["AmountInUSD"] = pd.to_numeric(df["AmountInUSD"], errors="coerce")
+df = df.dropna()
+
+# Encode categorical columns
+df["IndustryVertical"] = df["IndustryVertical"].astype("category").cat.codes
+df["CityLocation"] = df["CityLocation"].astype("category").cat.codes
+df["InvestmentType"] = df["InvestmentType"].astype("category").cat.codes
+
+# Features and target
+X = df[["IndustryVertical", "CityLocation", "InvestmentType"]]
+y = df["AmountInUSD"]
+
+# Train/Test Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train model
+model = RandomForestRegressor(
+    n_estimators=100,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+# Save model
+joblib.dump(model, "models/funding_model.pkl")
+
+print("funding_model.pkl created successfully!")
