@@ -13,53 +13,63 @@ df = load_data("data/startup_funding.csv")
 
 # Ensure AmountInUSD is numeric
 
-df["AmountInUSD"] = pd.to_numeric(df["AmountInUSD"], errors="coerce")
+df["AmountInUSD"] = pd.to_numeric(
+df["AmountInUSD"],
+errors="coerce"
+)
 
-# -------------------------------
+# Remove rows with missing funding amounts
+
+df = df.dropna(subset=["AmountInUSD"])
+
+# ----------------------------------
 
 # Top Funded Startups
 
-# -------------------------------
+# ----------------------------------
 
 st.subheader("🏆 Top 10 Funded Startups")
 
 if "StartupName" in df.columns:
-top_startups = (
-df.groupby("StartupName")["AmountInUSD"]
-.sum()
-.sort_values(ascending=False)
-.head(10)
-.reset_index()
-)
 
 ```
+top_startups = (
+    df.groupby("StartupName")["AmountInUSD"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+    .reset_index()
+)
+
 fig = px.bar(
     top_startups,
     x="StartupName",
     y="AmountInUSD",
     title="Top 10 Funded Startups"
 )
+
 st.plotly_chart(fig, use_container_width=True)
 ```
 
-# -------------------------------
+# ----------------------------------
 
 # Top Funding Cities
 
-# -------------------------------
+# ----------------------------------
 
 st.subheader("🏙️ Top Funding Cities")
 
 if "CityLocation" in df.columns:
-city_funding = (
-df.groupby("CityLocation")["AmountInUSD"]
-.sum()
-.sort_values(ascending=False)
-.head(10)
-.reset_index()
-)
 
 ```
+city_funding = (
+    df.groupby("CityLocation")["AmountInUSD"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+    .reset_index()
+)
+
 fig = px.pie(
     city_funding,
     names="CityLocation",
@@ -70,24 +80,25 @@ fig = px.pie(
 st.plotly_chart(fig, use_container_width=True)
 ```
 
-# -------------------------------
+# ----------------------------------
 
 # Industry-wise Funding
 
-# -------------------------------
+# ----------------------------------
 
 st.subheader("🏭 Industry-wise Funding")
 
 if "IndustryVertical" in df.columns:
-industry_funding = (
-df.groupby("IndustryVertical")["AmountInUSD"]
-.sum()
-.sort_values(ascending=False)
-.head(10)
-.reset_index()
-)
 
 ```
+industry_funding = (
+    df.groupby("IndustryVertical")["AmountInUSD"]
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+    .reset_index()
+)
+
 fig = px.bar(
     industry_funding,
     x="IndustryVertical",
@@ -98,23 +109,28 @@ fig = px.bar(
 st.plotly_chart(fig, use_container_width=True)
 ```
 
-# -------------------------------
+# ----------------------------------
 
-# Investment Type Analysis
+# Investment Type Distribution
 
-# -------------------------------
+# ----------------------------------
 
 st.subheader("💰 Investment Type Distribution")
 
 if "InvestmentType" in df.columns:
-investment_count = (
-df["InvestmentType"]
-.value_counts()
-.reset_index()
-)
 
 ```
-investment_count.columns = ["InvestmentType", "Count"]
+investment_count = (
+    df["InvestmentType"]
+    .dropna()
+    .value_counts()
+    .reset_index()
+)
+
+investment_count.columns = [
+    "InvestmentType",
+    "Count"
+]
 
 fig = px.pie(
     investment_count,
@@ -126,24 +142,29 @@ fig = px.pie(
 st.plotly_chart(fig, use_container_width=True)
 ```
 
-# -------------------------------
+# ----------------------------------
 
 # Top Investors
 
-# -------------------------------
+# ----------------------------------
 
 st.subheader("🤝 Top Investors")
 
 if "InvestorsName" in df.columns:
-investor_count = (
-df["InvestorsName"]
-.value_counts()
-.head(10)
-.reset_index()
-)
 
 ```
-investor_count.columns = ["Investor", "Investments"]
+investor_count = (
+    df["InvestorsName"]
+    .dropna()
+    .value_counts()
+    .head(10)
+    .reset_index()
+)
+
+investor_count.columns = [
+    "Investor",
+    "Investments"
+]
 
 fig = px.bar(
     investor_count,
@@ -155,21 +176,26 @@ fig = px.bar(
 st.plotly_chart(fig, use_container_width=True)
 ```
 
-# -------------------------------
+# ----------------------------------
 
 # Funding Trend Over Time
 
-# -------------------------------
+# ----------------------------------
 
 st.subheader("📅 Funding Trend")
 
 if "Date" in df.columns:
-try:
-df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
 
 ```
+try:
+    df["Date"] = pd.to_datetime(
+        df["Date"],
+        errors="coerce"
+    )
+
     trend = (
-        df.groupby(df["Date"].dt.year)["AmountInUSD"]
+        df.dropna(subset=["Date"])
+        .groupby(df["Date"].dt.year)["AmountInUSD"]
         .sum()
         .reset_index()
     )
@@ -186,6 +212,6 @@ df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
 
     st.plotly_chart(fig, use_container_width=True)
 
-except:
-    st.warning("Date column could not be processed.")
+except Exception as e:
+    st.warning(f"Date column could not be processed: {e}")
 ```
