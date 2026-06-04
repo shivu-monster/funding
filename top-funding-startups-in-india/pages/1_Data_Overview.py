@@ -33,10 +33,9 @@ st.dataframe(column_info)
 # Missing Values
 
 st.subheader("Missing Values")
-missing_values = df.isnull().sum()
-st.dataframe(missing_values.reset_index().rename(
-columns={"index": "Column", 0: "Missing Values"}
-))
+missing_values = df.isnull().sum().reset_index()
+missing_values.columns = ["Column", "Missing Values"]
+st.dataframe(missing_values)
 
 # Statistical Summary
 
@@ -55,9 +54,15 @@ st.dataframe(unique_values)
 # Funding Statistics
 
 if "AmountInUSD" in df.columns:
-st.subheader("Funding Statistics")
 
 ```
+df["AmountInUSD"] = pd.to_numeric(
+    df["AmountInUSD"],
+    errors="coerce"
+)
+
+st.subheader("Funding Statistics")
+
 total_funding = df["AmountInUSD"].sum()
 avg_funding = df["AmountInUSD"].mean()
 max_funding = df["AmountInUSD"].max()
@@ -77,6 +82,7 @@ with col2:
 # Dataset Download
 
 st.subheader("Download Dataset")
+
 csv = df.to_csv(index=False).encode("utf-8")
 
 st.download_button(
@@ -85,3 +91,4 @@ data=csv,
 file_name="startup_funding.csv",
 mime="text/csv"
 )
+
