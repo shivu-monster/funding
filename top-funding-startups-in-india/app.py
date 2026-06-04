@@ -1,6 +1,10 @@
 import streamlit as st
 
+# --------------------------------------------------
+
 # Page Configuration
+
+# --------------------------------------------------
 
 st.set_page_config(
 page_title="Top Funding Startups in India",
@@ -9,127 +13,174 @@ layout="wide",
 initial_sidebar_state="expanded"
 )
 
-# Banner Image
+# --------------------------------------------------
+
+# Banner
+
+# --------------------------------------------------
 
 try:
 st.image(
 "assets/banner.png",
 use_container_width=True
 )
-except FileNotFoundError:
-st.warning(
-"Banner image not found. Place banner.png inside the assets folder."
-)
-except Exception as e:
-st.error(f"Error loading banner: {e}")
+except Exception:
+st.info("Banner image not found.")
+
+# --------------------------------------------------
 
 # Title
+
+# --------------------------------------------------
 
 st.title("🚀 Top Funding Startups in India")
 
 st.markdown(
 """
-Welcome to the **Top Funding Startups in India Dashboard**.
 
-This interactive dashboard helps analyze startup funding trends,
-investor activity, city-wise funding distribution, and provides
-funding prediction insights using Machine Learning.
+### Interactive Startup Funding Analysis Dashboard
+
+Analyze startup funding trends in India, explore investor activity,
+visualize funding patterns, and predict future startup funding using
+Machine Learning.
 """
 )
 
-# Sidebar Information
+# --------------------------------------------------
 
-st.sidebar.title("Navigation")
+# Quick Statistics
 
-st.sidebar.info(
-"""
-Use the pages menu on the left to navigate:
-
-📊 Data Overview
-
-📈 Visualizations
-
-🔮 Prediction
-
-📋 Insights
-"""
-)
-
-# Dashboard Features
+# --------------------------------------------------
 
 st.header("📌 Dashboard Features")
 
 col1, col2 = st.columns(2)
 
 with col1:
+
+```
 st.success("📊 Data Overview")
-st.write(
-"""
+
+st.markdown(
+    """
+```
 
 * Dataset Summary
-* Missing Values Analysis
-* Statistical Information
+* Missing Value Analysis
+* Statistical Reports
 * Funding Statistics
   """
   )
 
   st.success("📈 Visualizations")
-  st.write(
+
+  st.markdown(
   """
 * Top Funded Startups
-* City-wise Funding
+* Funding by City
 * Industry Analysis
 * Funding Trends
   """
   )
 
 with col2:
-st.success("🔮 Prediction")
-st.write(
-"""
+
+```
+st.success("🔮 Funding Prediction")
+
+st.markdown(
+    """
+```
 
 * Startup Funding Prediction
 * Machine Learning Model
-* Investment Analysis
+* Investor Analysis
   """
   )
 
   st.success("📋 Insights")
-  st.write(
+
+  st.markdown(
   """
-* Top Startup Insights
-* Investor Analysis
-* Funding Recommendations
-* Market Trends
+* Funding Insights
+* Top Investors
+* Startup Ecosystem Trends
+* Recommendations
   """
   )
 
+# --------------------------------------------------
+
 # Project Objective
+
+# --------------------------------------------------
 
 st.header("🎯 Project Objective")
 
 st.write(
 """
-The objective of this project is to analyze startup funding data
-across India and identify important trends such as:
+This project analyzes startup funding data across India
+to identify patterns, trends, and investment opportunities.
 
-• Most funded startups
+Key objectives:
 
-• Top investment sectors
+• Identify top funded startups
 
-• Active investors
+• Analyze city-wise funding distribution
 
-• Startup hubs in India
+• Discover leading industries
 
-• Funding prediction using machine learning
+• Track investor participation
+
+• Predict startup funding using Machine Learning
 """
 )
 
+# --------------------------------------------------
+
+# Navigation Help
+
+# --------------------------------------------------
+
+st.header("🧭 Navigation")
+
+st.info(
+"""
+Use the sidebar to access:
+
+📊 Data Overview
+
+📈 Visualizations
+
+🔮 Funding Prediction
+
+📋 Insights
+"""
+)
+
+# --------------------------------------------------
+
+# Technologies Used
+
+# --------------------------------------------------
+
+st.header("🛠️ Technologies")
+
+tech1, tech2, tech3, tech4 = st.columns(4)
+
+tech1.metric("Frontend", "Streamlit")
+tech2.metric("Analysis", "Pandas")
+tech3.metric("Charts", "Plotly")
+tech4.metric("ML Model", "Random Forest")
+
+# --------------------------------------------------
+
 # Footer
+
+# --------------------------------------------------
 
 st.markdown("---")
 
 st.caption(
-"Developed using Streamlit, Pandas, Plotly, and Scikit-Learn"
+"🚀 Developed using Streamlit, Pandas, Plotly, Scikit-Learn, and Python"
 )
-
