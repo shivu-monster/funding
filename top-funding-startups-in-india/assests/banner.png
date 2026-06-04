@@ -1,0 +1,43 @@
+from PIL import Image, ImageDraw, ImageFont
+
+# Create image
+width, height = 1200, 300
+image = Image.new("RGB", (width, height), color=(25, 118, 210))
+
+draw = ImageDraw.Draw(image)
+
+# Title
+title = "Top Funding Startups in India"
+subtitle = "Interactive Startup Funding Analysis Dashboard"
+
+try:
+    title_font = ImageFont.truetype("arial.ttf", 60)
+    subtitle_font = ImageFont.truetype("arial.ttf", 30)
+except:
+    title_font = ImageFont.load_default()
+    subtitle_font = ImageFont.load_default()
+
+draw.text((50, 80), title, fill="white", font=title_font)
+draw.text((50, 170), subtitle, fill="white", font=subtitle_font)
+
+# Save banner
+image.save("assets/banner.png")
+
+print("banner.png created successfully!")
+
+Install Pillow:
+
+pip install pillow
+
+Run:
+
+python create_banner.py
+
+This creates:
+
+assets/
+└── banner.png
+
+which you can display in Streamlit using:
+
+st.image("assets/banner.png", use_container_width=True)
