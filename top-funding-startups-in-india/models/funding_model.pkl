@@ -1,7 +1,12 @@
+import os
 import pandas as pd
 import joblib
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_absolute_error
+
+# Create models directory if it doesn't exist
+os.makedirs("models", exist_ok=True)
 
 # Load dataset
 df = pd.read_csv("data/startup_funding.csv")
@@ -10,7 +15,14 @@ df = pd.read_csv("data/startup_funding.csv")
 df["AmountInUSD"] = pd.to_numeric(df["AmountInUSD"], errors="coerce")
 
 # Remove missing values
-df = df.dropna(subset=["AmountInUSD"])
+df = df.dropna(
+    subset=[
+        "AmountInUSD",
+        "IndustryVertical",
+        "CityLocation",
+        "InvestmentType"
+    ]
+)
 
 # Encode categorical columns
 df["Industry"] = df["IndustryVertical"].astype("category").cat.codes
@@ -23,7 +35,10 @@ y = df["AmountInUSD"]
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
 )
 
 # Train model
@@ -34,7 +49,33 @@ model = RandomForestRegressor(
 
 model.fit(X_train, y_train)
 
+# Evaluate model
+y_pred = model.predict(X_test)
+
+print("R² Score:", r2_score(y_test, y_pred))
+print("MAE:", mean_absolute_error(y_test, y_pred))
+
 # Save model
 joblib.dump(model, "models/funding_model.pkl")
 
 print("Model saved successfully!")
+Important issue with your current code
+
+Using:
+
+.astype("category").cat.codes
+
+creates numeric codes, but those mappings are not saved. During prediction in Streamlit, the codes may not match the training data.
+
+A better approach is to save the category mappings:
+
+industry_mapping = dict(
+    enumerate(df["IndustryVertical"].astype("category").cat.categories)
+)
+
+city_mapping = dict(
+    enumerate(df["CityLocation"].astype("category").cat.categories)
+)
+
+investment_mapping = dict(
+    enumerate(df["InvestmentType"].astype("category").cat.categories)
