@@ -1,12 +1,25 @@
+Creates a 1200 × 300 blue image.
+Adds the title "Top Funding Startups in India".
+Adds the subtitle "Interactive Startup Funding Analysis Dashboard".
+Saves the file as assets/banner.png.
+Can then be displayed in Streamlit using:
+st.image("assets/banner.png", use_container_width=True)
+
+A slightly improved version that centers the text and creates the assets folder automatically is:
+
 from PIL import Image, ImageDraw, ImageFont
+import os
+
+# Create assets folder
+os.makedirs("assets", exist_ok=True)
+
+# Image size
+width, height = 1200, 300
 
 # Create image
-width, height = 1200, 300
-image = Image.new("RGB", (width, height), color=(25, 118, 210))
-
+image = Image.new("RGB", (width, height), (25, 118, 210))
 draw = ImageDraw.Draw(image)
 
-# Title
 title = "Top Funding Startups in India"
 subtitle = "Interactive Startup Funding Analysis Dashboard"
 
@@ -17,13 +30,30 @@ except:
     title_font = ImageFont.load_default()
     subtitle_font = ImageFont.load_default()
 
-draw.text((50, 80), title, fill="white", font=title_font)
-draw.text((50, 170), subtitle, fill="white", font=subtitle_font)
+# Center title
+title_bbox = draw.textbbox((0, 0), title, font=title_font)
+title_width = title_bbox[2] - title_bbox[0]
 
-# Save banner
+subtitle_bbox = draw.textbbox((0, 0), subtitle, font=subtitle_font)
+subtitle_width = subtitle_bbox[2] - subtitle_bbox[0]
+
+draw.text(
+    ((width - title_width) // 2, 80),
+    title,
+    fill="white",
+    font=title_font
+)
+
+draw.text(
+    ((width - subtitle_width) // 2, 170),
+    subtitle,
+    fill="white",
+    font=subtitle_font
+)
+
 image.save("assets/banner.png")
 
-print("banner.png created successfully!")
+print("Banner created successfully!")
 
 Install Pillow:
 
@@ -33,11 +63,6 @@ Run:
 
 python create_banner.py
 
-This creates:
-
-assets/
-└── banner.png
-
-which you can display in Streamlit using:
+Then in Streamlit:
 
 st.image("assets/banner.png", use_container_width=True)
